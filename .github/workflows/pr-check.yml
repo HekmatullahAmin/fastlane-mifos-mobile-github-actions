@@ -116,7 +116,7 @@ on:
         default: true
 
     secrets:
-      MATCH_GIT_AUTHORIZATION_TOKEN:
+      MATCH_GIT_BASIC_AUTHORIZATION:
         description: 'Base64-encoded GitHub token used by Fastlane Match to authenticate and clone the certificates/profiles repository securely'
         required: true
 
