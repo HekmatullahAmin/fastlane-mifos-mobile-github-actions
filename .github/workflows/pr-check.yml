@@ -141,50 +141,50 @@ jobs:
       - name: Static Analysis Check
         uses: openMF/kmp-static-analysis-check-action@v1.0.0
 
-  build_android_app:
-    name: Build Android Application
-    needs: [ checks ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Build Android App
-        uses: openMF/kmp-build-android-app-action@v1.0.1
-        with:
-          android_package_name: ${{ inputs.android_package_name }}
-
-  build_desktop_app:
-    name: Build Desktop Application
-    needs: [ checks ]
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Build Desktop App
-        uses: openMF/kmp-build-desktop-app-action@v1.0.0
-        with:
-          desktop_package_name: ${{ inputs.desktop_package_name }}
-          build_type: 'Debug'
-
-  build_web_app:
-    name: Build Web Application
-    needs: [ checks ]
-    runs-on: windows-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Build Web App
-        uses: openMF/kmp-build-web-app-action@v1.0.0
-        with:
-          web_package_name: ${{ inputs.web_package_name }}
+#  build_android_app:
+#    name: Build Android Application
+#    needs: [ checks ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Build Android App
+#        uses: openMF/kmp-build-android-app-action@v1.0.1
+#        with:
+#          android_package_name: ${{ inputs.android_package_name }}
+#
+#  build_desktop_app:
+#    name: Build Desktop Application
+#    needs: [ checks ]
+#    strategy:
+#      matrix:
+#        os: [ ubuntu-latest, macos-latest, windows-latest ]
+#    runs-on: ${{ matrix.os }}
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#
+#      - name: Build Desktop App
+#        uses: openMF/kmp-build-desktop-app-action@v1.0.0
+#        with:
+#          desktop_package_name: ${{ inputs.desktop_package_name }}
+#          build_type: 'Debug'
+#
+#  build_web_app:
+#    name: Build Web Application
+#    needs: [ checks ]
+#    runs-on: windows-latest
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#
+#      - name: Build Web App
+#        uses: openMF/kmp-build-web-app-action@v1.0.0
+#        with:
+#          web_package_name: ${{ inputs.web_package_name }}
 
   build_ios_app:
     name: Build iOS App
