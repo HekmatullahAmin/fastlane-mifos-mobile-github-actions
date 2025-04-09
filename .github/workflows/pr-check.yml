@@ -146,6 +146,7 @@ jobs:
         with:
           match_git_basic_authorization: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }} # [Added] Forward Match Git auth token to action
           match_password: ${{ secrets.MATCH_PASSWORD }} # [Added] Forward Match Git password to action
+          keychain_password: ${{ secrets.KEYCHAIN_PASSWORD }} # [Added] Forward keychain password to action
 
 #  checks:
 #    name: Static Analysis Check
