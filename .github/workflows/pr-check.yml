@@ -129,16 +129,6 @@ concurrency:
   cancel-in-progress: true  # Cancels previous runs if a new one is triggered
 
 jobs:
-#  checks:
-#    name: Static Analysis Check
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v4
-
-#      - name: Static Analysis Check
-#        uses: openMF/kmp-static-analysis-check-action@v1.0.0
-
   build_ios_app:
     name: Build iOS App
     needs: [ checks ]
@@ -153,6 +143,16 @@ jobs:
         with:
           match_git_authorization_token: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }} # [Added] Forward Match Git auth token to action
           match_password: ${{ secrets.MATCH_PASSWORD }} # [Added] Forward Match Git password to action
+
+#  checks:
+#    name: Static Analysis Check
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+
+#      - name: Static Analysis Check
+#        uses: openMF/kmp-static-analysis-check-action@v1.0.0
 
 #      match_git_basic_authorization:
 #        description: 'Github token for Fastlane Match repo access'
