@@ -116,14 +116,16 @@ on:
         default: true
 
     secrets:
-      MATCH_GIT_BASIC_AUTHORIZATION:
-        description: 'Github token for Fastlane Match repo access'
+      MATCH_GIT_AUTHORIZATION_TOKEN:
+        description: 'Base64-encoded GitHub token used by Fastlane Match to authenticate and clone the certificates/profiles repository securely'
         required: true
+
       MATCH_PASSWORD:
-        description: 'Passphrase for Fastlane Match repo access'
+        description: 'Encryption passphrase used by Fastlane Match to decrypt the signing certificates and provisioning profiles stored in the remote repository'
         required: true
+
       KEYCHAIN_PASSWORD:
-        description: 'Password to unlock the keychain for signing'
+        description: 'Password used to create and unlock a temporary keychain during the CI build, allowing codesigning without user interaction'
         required: true
 
 # Concurrency settings to prevent multiple simultaneous workflow runs
