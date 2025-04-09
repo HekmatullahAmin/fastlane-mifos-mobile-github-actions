@@ -122,6 +122,9 @@ on:
       MATCH_PASSWORD:
         description: 'Passphrase for Fastlane Match repo access'
         required: true
+      KEYCHAIN_PASSWORD:
+        description: 'Password to unlock the keychain for signing'
+        required: true
 
 # Concurrency settings to prevent multiple simultaneous workflow runs
 concurrency:
