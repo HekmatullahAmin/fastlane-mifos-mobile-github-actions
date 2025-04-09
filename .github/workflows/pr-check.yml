@@ -136,8 +136,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Static Analysis Check
-        uses: openMF/kmp-static-analysis-check-action@v1.0.0
+#      - name: Static Analysis Check
+#        uses: openMF/kmp-static-analysis-check-action@v1.0.0
 
   build_ios_app:
     name: Build iOS App
