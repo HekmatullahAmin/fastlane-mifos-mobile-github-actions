@@ -131,7 +131,7 @@ concurrency:
 jobs:
   build_ios_app:
     name: Build iOS App
-    needs: [ checks ]
+#    needs: [ checks ]
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
