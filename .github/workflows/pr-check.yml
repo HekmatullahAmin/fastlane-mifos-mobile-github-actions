@@ -141,7 +141,7 @@ jobs:
         if: ${{ inputs.build_ios }}
         uses: HekmatullahAmin/fastlane-kmp-build-ios-app-action@master
         with:
-          match_git_authorization_token: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }} # [Added] Forward Match Git auth token to action
+          match_git_basic_authorization: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }} # [Added] Forward Match Git auth token to action
           match_password: ${{ secrets.MATCH_PASSWORD }} # [Added] Forward Match Git password to action
 
 #  checks:
