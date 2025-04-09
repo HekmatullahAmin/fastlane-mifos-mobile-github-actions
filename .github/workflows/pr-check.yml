@@ -129,12 +129,12 @@ concurrency:
   cancel-in-progress: true  # Cancels previous runs if a new one is triggered
 
 jobs:
-  checks:
-    name: Static Analysis Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+#  checks:
+#    name: Static Analysis Check
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
 
 #      - name: Static Analysis Check
 #        uses: openMF/kmp-static-analysis-check-action@v1.0.0
