@@ -1,0 +1,203 @@
+## Overview
+#
+# This reusable GitHub Actions workflow provides a comprehensive Continuous Integration (CI) pipeline
+# for multi-platform mobile and desktop applications, specifically designed for projects using Gradle and Java/Kotlin.
+#
+### Key Features
+# - Automated code quality checks
+# - Dependency management and verification
+# - Cross-platform desktop application builds (Windows, Linux, MacOS)
+# - Android APK build generation
+# - Artifact generation and storage
+#
+### Workflow Jobs
+# 1. **Setup**: Prepares the build environment
+#   - Checks out repository code
+#   - Sets up Java 17
+#   - Configures Gradle
+#   - Manages dependency caching
+#
+# 2. **Code Quality Checks**:
+#   - Build logic verification
+#   - Code formatting checks (Spotless)
+#   - Static code analysis (Detekt)
+#
+# 3. **Dependency Guard**:
+#   - Verifies dependencies against baseline
+#   - Prevents unauthorized dependency changes
+#   - Supports automatic baseline updates
+#
+# 4. **Android App Build**:
+#   - Builds debug APK for demo flavor
+#   - Uploads APK artifacts
+#
+# 5. **Desktop App Build**:
+#   - Builds applications for Windows, Linux, and MacOS
+#   - Generates platform-specific executables and packages
+#
+### Prerequisites
+#   - Java 17
+#   - Gradle
+#   - Configured build scripts for:
+#       - Android module
+#       - Desktop module
+#   - Installed Gradle plugins:
+#       - Spotless
+#       - Detekt
+#       - Dependency Guard
+#
+### Configuration Parameters
+# The workflow requires two input parameters:
+#
+#   | Parameter | Description | Type | Required |
+#   |-----------|-------------|------|----------|
+#   | `android_package_name` | Name of the Android project module | String | Yes |
+#   | `desktop_package_name` | Name of the Desktop project module | String | Yes |
+#
+### Usage Example
+#   ```yaml
+# name: PR Checks
+# Trigger conditions for the workflow
+#  on:
+#    push:
+#      branches: [ dev ]  # Runs on pushes to dev branch
+#    pull_request:       # Runs on all pull requests
+#
+#  # Concurrency settings to prevent multiple simultaneous workflow runs
+#  concurrency:
+#    group: pr-${{ github.ref }}
+#    cancel-in-progress: true  # Cancels previous runs if a new one is triggered
+#
+#  permissions:
+#    contents: write
+#
+#  jobs:
+#    pr_checks:
+#      name: PR Checks
+#      uses: openMF/mifos-mobile-github-actions/.github/workflows/pr-check.yaml@main
+#      secrets: inherit
+#      with:
+#        android_package_name: 'mifospay-android'
+#        desktop_package_name: 'mifospay-desktop'
+#   ```
+#
+# GitHub Actions workflow for continuous integration of Mobile-Wallet project
+# Runs on master and dev branches to ensure code quality and build stability
+name: Debug Build & PR Checks
+
+# Trigger conditions for the workflow
+on:
+  workflow_call:
+    inputs:
+      android_package_name:
+        description: 'Name of the Android project module'
+        type: string
+        required: true
+
+      desktop_package_name:
+        description: 'Name of the Desktop project module'
+        type: string
+        required: true
+
+      web_package_name:
+        description: 'Name of the Web project module'
+        type: string
+        required: true
+
+      ios_package_name:
+        description: 'Name of the iOS project module'
+        type: string
+        required: true
+
+      build_ios:
+        description: 'Build iOS Application'
+        type: boolean
+        required: false
+        default: true
+
+      match_git_authorization_token:
+        description: 'Github token for Fastlane Match repo access'
+        type: string
+        required: true
+
+      match_password:
+        description: 'Passphrase for Fastlane Match repo access'
+        type: string
+        required: true
+
+# Concurrency settings to prevent multiple simultaneous workflow runs
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true  # Cancels previous runs if a new one is triggered
+
+jobs:
+  checks:
+    name: Static Analysis Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Static Analysis Check
+        uses: openMF/kmp-static-analysis-check-action@v1.0.0
+
+  build_android_app:
+    name: Build Android Application
+    needs: [ checks ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build Android App
+        uses: openMF/kmp-build-android-app-action@v1.0.1
+        with:
+          android_package_name: ${{ inputs.android_package_name }}
+
+  build_desktop_app:
+    name: Build Desktop Application
+    needs: [ checks ]
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Desktop App
+        uses: openMF/kmp-build-desktop-app-action@v1.0.0
+        with:
+          desktop_package_name: ${{ inputs.desktop_package_name }}
+          build_type: 'Debug'
+
+  build_web_app:
+    name: Build Web Application
+    needs: [ checks ]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Web App
+        uses: openMF/kmp-build-web-app-action@v1.0.0
+        with:
+          web_package_name: ${{ inputs.web_package_name }}
+
+  build_ios_app:
+    name: Build iOS App
+    needs: [ checks ]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build iOS App
+        if: ${{ inputs.build_ios }}
+#        uses: openMF/kmp-build-ios-app-action@v1.0.1
+        uses: HekmatullahAmin/fastlane-kmp-build-ios-app-action@master
+        with:
+          match_git_authorization_token: ${{ inputs.match_git_authorization_token }} # [Added] Forward Match Git auth token to action
+          match_password: ${{ inputs.match_password }} # [Added] Forward Match Git password to action
